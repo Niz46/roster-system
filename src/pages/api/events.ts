@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { NextApiRequest, NextApiResponse } from "next";
 
-
 let events: any[] = [];
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
