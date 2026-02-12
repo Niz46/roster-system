@@ -4,6 +4,22 @@ export type EventStatus = "draft" | "published" | "locked";
 
 export type UserStatus = "all" | "available" | "on_leave";
 
+export type SidebarItemProps = {
+  icon: React.ReactElement;
+  label: string;
+  isCollapsed: boolean;
+};
+
+export type SidebarContentProps = {
+  isCollapsed: boolean;
+  toggleCollapse: () => void;
+  showCollapseToggle?: boolean;
+};
+
+export type NestedMenuProps = {
+  isCollapsed: boolean;
+};
+
 export interface User {
   id: string;
   name: string;
