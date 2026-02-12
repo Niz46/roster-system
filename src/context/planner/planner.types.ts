@@ -1,3 +1,7 @@
+import { NextPage } from "next";
+import { ReactNode, ReactElement } from "react";
+import { AppProps } from "next/app";
+
 export type PlannerView = "live" | "planner";
 
 export type EventStatus = "draft" | "published" | "locked";
@@ -20,6 +24,17 @@ export type NestedMenuProps = {
   isCollapsed: boolean;
 };
 
+export type NextPageWithLayout<P = object, IP = P> = NextPage<P, IP> & {
+  getLayout?: (page: ReactElement) => ReactNode;
+};
+
+export type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout;
+};
+
+export interface DashboardLayoutProps {
+  children: ReactNode;
+}
 export interface User {
   id: string;
   name: string;

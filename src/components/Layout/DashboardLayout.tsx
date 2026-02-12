@@ -12,8 +12,9 @@ import { GiHamburgerMenu as HamburgerIcon } from "react-icons/gi";
 import { LuChevronLeft as ChevronLeftIcon } from "react-icons/lu";
 import SidebarContent from "../ui/Sidebar";
 import Header from "../ui/Header";
+import { DashboardLayoutProps } from "@/src/types";
 
-export default function DashboardLayout() {
+export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const { open, setOpen } = useDisclosure();
   const isMobile = useBreakpointValue({ base: true, md: false });
@@ -89,6 +90,7 @@ export default function DashboardLayout() {
       <Flex direction="column" flex="1" minW="0">
         <Header />
         <Box flex="1" bg="gray.900" />
+        {children}
       </Flex>
     </Flex>
   );

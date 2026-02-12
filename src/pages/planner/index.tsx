@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { ReactElement, useEffect } from "react";
 import { Box, Container, Grid } from "@chakra-ui/react";
 import {
   PlannerProvider,
@@ -10,19 +10,24 @@ import UsersList from "../../components/UsersPanel/UsersList";
 import { fetchUsers } from "../../services/users.service";
 import { fetchEvents } from "../../services/events.service";
 import { initialPlannerState } from "../../context/planner/planner.reducer";
+import DashboardLayout from "../../components/Layout/DashboardLayout";
+import { NextPageWithLayout } from "@/src/types";
 
 const PlannerInner: React.FC = () => {
   const { dispatch } = usePlannerContext();
 
   useEffect(() => {
     let mounted = true;
+
     async function load() {
       try {
         dispatch({ type: "LOAD_STATE", payload: { loading: true } });
+
         const [users, events] = await Promise.all([
           fetchUsers(),
           fetchEvents(),
         ]);
+
         if (!mounted) return;
 
         const resources = [
@@ -31,6 +36,7 @@ const PlannerInner: React.FC = () => {
           { id: "r3", title: "Bijzonderheden-Verlof" },
           { id: "r4", title: "Financien" },
         ];
+
         dispatch({
           type: "LOAD_STATE",
           payload: { users, events, resources, loading: false },
@@ -40,7 +46,9 @@ const PlannerInner: React.FC = () => {
         dispatch({ type: "LOAD_STATE", payload: { loading: false } });
       }
     }
+
     load();
+
     return () => {
       mounted = false;
     };
@@ -66,10 +74,14 @@ const PlannerInner: React.FC = () => {
   );
 };
 
-const PlannerPage: React.FC = () => (
+const PlannerPage: NextPageWithLayout = () => (
   <PlannerProvider initial={initialPlannerState}>
     <PlannerInner />
   </PlannerProvider>
 );
+
+PlannerPage.getLayout = function getLayout(page: ReactElement) {
+  return <DashboardLayout>{page}</DashboardLayout>;
+};
 
 export default PlannerPage;

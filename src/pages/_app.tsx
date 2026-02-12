@@ -1,13 +1,15 @@
-import { AppProps } from "next/app";
 import { ChakraProvider, createSystem } from "@chakra-ui/react";
 import themeConfig from "../styles/chakra/theme";
+import { AppPropsWithLayout } from "../types";
 
 const system = createSystem(themeConfig);
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps }: AppPropsWithLayout) {
+  const getLayout = Component.getLayout ?? ((page) => page);
+
   return (
     <ChakraProvider value={system}>
-      <Component {...pageProps} />
+      {getLayout(<Component {...pageProps} />)}
     </ChakraProvider>
   );
 }
