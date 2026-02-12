@@ -10,10 +10,9 @@ import UsersList from "../../components/UsersPanel/UsersList";
 import { fetchUsers } from "../../services/users.service";
 import { fetchEvents } from "../../services/events.service";
 import { initialPlannerState } from "../../context/planner/planner.reducer";
-// import { uid } from '../../utils/uid';
 
 const PlannerInner: React.FC = () => {
-  const { state, dispatch } = usePlannerContext();
+  const { dispatch } = usePlannerContext();
 
   useEffect(() => {
     let mounted = true;
@@ -25,7 +24,7 @@ const PlannerInner: React.FC = () => {
           fetchEvents(),
         ]);
         if (!mounted) return;
-        // simplistic resource set for demo
+
         const resources = [
           { id: "r1", title: "Behandelingskamer1" },
           { id: "r2", title: "Management" },
@@ -48,12 +47,17 @@ const PlannerInner: React.FC = () => {
   }, [dispatch]);
 
   return (
-    <Container maxW="full" px={6} py={6}>
-      <Grid templateColumns="300px 1fr" gap={6}>
+    <Container maxW="full" px={{ base: 4, md: 6 }} py={6}>
+      <Grid
+        templateColumns={{ base: "1fr", lg: "300px 1fr" }}
+        gap={6}
+        alignItems="start"
+      >
         <Box>
           <UsersList />
         </Box>
-        <Box>
+
+        <Box as="main" minW={0}>
           <PlannerHeader />
           <CalendarGrid />
         </Box>
