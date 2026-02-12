@@ -1,18 +1,37 @@
-import { Box, Text, Badge } from "@chakra-ui/react";
 import React from "react";
+import { Box, Text, Badge } from "@chakra-ui/react";
 import { RosterEvent } from "../../context/planner/planner.types";
 import { usePlannerContext } from "../../context/planner/planner.context";
 
 const EventCard: React.FC<{ event: RosterEvent }> = ({ event }) => {
   const { dispatch } = usePlannerContext();
 
-  const onDragStart = (e: React.DragEvent) => {
-    e.dataTransfer.setData("text/plain", event.id);
+  const onDragStart = (e: React.DragEvent<HTMLDivElement>) => {
+    const target = e.currentTarget;
+    const rect = target.getBoundingClientRect();
+    const offsetY = e.clientY - rect.top;
+    const payload = JSON.stringify({
+      id: event.id,
+      offsetY,
+      durationMs:
+        new Date(event.end).getTime() - new Date(event.start).getTime(),
+    });
+    e.dataTransfer.setData("text/plain", payload);
     e.dataTransfer.effectAllowed = "move";
   };
 
-  const onClick = () =>
+  const onClick = () => {
     dispatch({ type: "SET_SELECTED_EVENT", payload: event.id });
+  };
+
+  const startTime = new Date(event.start).toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  const endTime = new Date(event.end).toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 
   return (
     <Box
@@ -28,18 +47,10 @@ const EventCard: React.FC<{ event: RosterEvent }> = ({ event }) => {
       cursor="grab"
       boxShadow="sm"
     >
-      <Badge>{event.userId}</Badge>
+      <Badge mb={1}>{event.userId}</Badge>
       <Text fontWeight="bold">{event.title}</Text>
       <Text fontSize="sm" color="gray.600">
-        {new Date(event.start).toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        })}{" "}
-        -{" "}
-        {new Date(event.end).toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        })}
+        {startTime} - {endTime}
       </Text>
     </Box>
   );

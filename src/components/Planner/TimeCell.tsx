@@ -1,13 +1,22 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Box } from "@chakra-ui/react";
-import { Resource } from "../../context/planner/planner.types";
 import { usePlannerContext } from "../../context/planner/planner.context";
-import { computeIsoFromDateAndTime } from "../../utils/time";
+import { calculateDropStartIso, hasOverlap } from "../../utils/time";
 
-const TimeCell: React.FC<{ time: string; resource: Resource }> = ({
+interface TimeCellProps {
+  time: string;
+  resourceId: string;
+  cellHeightPx: number;
+  slotStepMins: number;
+}
+
+const TimeCell: React.FC<TimeCellProps> = ({
   time,
-  resource,
+  resourceId,
+  cellHeightPx,
+  slotStepMins,
 }) => {
+  const cellRef = useRef<HTMLDivElement | null>(null);
   const { state, dispatch } = usePlannerContext();
 
   const onDragOver = (e: React.DragEvent) => {
@@ -17,30 +26,70 @@ const TimeCell: React.FC<{ time: string; resource: Resource }> = ({
 
   const onDrop = (e: React.DragEvent) => {
     e.preventDefault();
-    const eventId = e.dataTransfer.getData("text/plain");
-    if (!eventId) return;
-
-    const newStart = computeIsoFromDateAndTime(state.date, time);
-
-    const ev = state.events.find((x) => x.id === eventId);
-    let durationMs = 60 * 60 * 1000;
-    if (ev) {
-      durationMs = new Date(ev.end).getTime() - new Date(ev.start).getTime();
+    const raw = e.dataTransfer.getData("text/plain");
+    if (!raw) return;
+    let payload: { id: string; offsetY: number; durationMs: number };
+    try {
+      payload = JSON.parse(raw);
+    } catch {
+      payload = { id: raw, offsetY: 0, durationMs: 60 * 60 * 1000 };
     }
-    const newEnd = new Date(
-      new Date(newStart).getTime() + durationMs,
+
+    const cellRect = cellRef.current?.getBoundingClientRect();
+    if (!cellRect) return;
+
+    const newStartIso = calculateDropStartIso({
+      date: state.date,
+      slotBaseTime: time,
+      cellRectTop: cellRect.top,
+      clientY: e.clientY,
+      dragOffsetY: payload.offsetY ?? 0,
+      cellHeightPx,
+      slotStepMins,
+      snapStepMins: 15,
+    });
+
+    const newEndIso = new Date(
+      new Date(newStartIso).getTime() + (payload.durationMs ?? 60 * 60 * 1000),
     ).toISOString();
+
+    const ev = state.events.find((x) => x.id === payload.id);
+    const candidate = {
+      id: payload.id,
+      start: newStartIso,
+      end: newEndIso,
+      userId: ev?.userId,
+      resourceId,
+    };
+
+    const overlapCheck = hasOverlap(state.events, candidate, {
+      checkUser: true,
+      checkResource: true,
+    });
+    if (overlapCheck.overlap) {
+      console.warn(
+        "Overlap detected with events:",
+        overlapCheck.overlapping.map((o) => o.id),
+      );
+    }
+
     dispatch({
       type: "DRAG_EVENT",
-      payload: { id: eventId, newStart, newEnd, newResourceId: resource.id },
+      payload: {
+        id: payload.id,
+        newStart: newStartIso,
+        newEnd: newEndIso,
+        newResourceId: resourceId,
+      },
     });
   };
 
   return (
     <Box
+      ref={cellRef}
       onDragOver={onDragOver}
       onDrop={onDrop}
-      h="60px"
+      h={`${cellHeightPx}px`}
       w="100%"
       position="relative"
     />
