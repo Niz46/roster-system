@@ -8,10 +8,10 @@ An enterprise-grade, resource-based scheduling system. This platform provides a 
 
 Unlike traditional rosters, this project is built on the "bleeding edge" to ensure long-term maintainability:
 
-* **Core:** React 19 (Concurrent Rendering) & Next.js 16.
-* **UI Architecture:** Chakra UI v3 (utilizing the new `Dialog` and `Field` compound components).
-* **Styling:** Tailwind CSS v4 + Emotion for high-performance CSS-in-JS.
-* **Logic:** Custom hooks for date navigation and debounced LocalStorage persistence.
+- **Core:** React 19 (Concurrent Rendering) & Next.js 16.
+- **UI Architecture:** Chakra UI v3 (utilizing the new `Dialog` and `Field` compound components).
+- **Styling:** Tailwind CSS v4 + Emotion for high-performance CSS-in-JS.
+- **Logic:** Custom hooks for date navigation and debounced LocalStorage persistence.
 
 ---
 
@@ -19,8 +19,8 @@ Unlike traditional rosters, this project is built on the "bleeding edge" to ensu
 
 ### Prerequisites
 
-* **Node.js:** v20.x (LTS) or higher.
-* **npm:** v10.x or higher.
+- **Node.js:** v20.x (LTS) or higher.
+- **npm:** v10.x or higher.
 
 ### Installation & Development
 
@@ -80,11 +80,11 @@ This check is performed across both **User** and **Resource** dimensions simulta
 
 If you encounter linting or type errors, remember that this project follows **Chakra UI v3** standards. Do **not** downgrade to React 18. Follow these patterns:
 
-* **Layouts:** Use `gap={4}` instead of `spacing={4}`.
-* **Modals:** Use the `Dialog` compound components instead of `Modal`.
-* **Inputs:** Use `Field.Root` and `Field.Label` instead of `FormControl`.
-* **Icons:** `IconButton` now takes the icon as a child: `<IconButton><ChevronLeftIcon /></IconButton>`.
-* **State Sync:** Avoid `useEffect` to sync props to state; use the `key` prop on components to trigger a fresh state re-initialization.
+- **Layouts:** Use `gap={4}` instead of `spacing={4}`.
+- **Modals:** Use the `Dialog` compound components instead of `Modal`.
+- **Inputs:** Use `Field.Root` and `Field.Label` instead of `FormControl`.
+- **Icons:** `IconButton` now takes the icon as a child: `<IconButton><ChevronLeftIcon /></IconButton>`.
+- **State Sync:** Avoid `useEffect` to sync props to state; use the `key` prop on components to trigger a fresh state re-initialization.
 
 ---
 
