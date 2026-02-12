@@ -1,39 +1,65 @@
 import React from "react";
-import { Box, Flex, Avatar, Text, Badge } from "@chakra-ui/react";
-import { User } from "../../context/planner/planner.types";
-
-const statusColor = (status: User["status"]) => {
-  switch (status) {
-    case "available":
-      return "green";
-    case "on_leave":
-      return "orange";
-    default:
-      return "gray";
-  }
-};
+import { Box, Flex, Text, Badge } from "@chakra-ui/react";
+import { Avatar } from "../ui/avatar";
+import { User } from "../../types";
 
 const UserChip: React.FC<{ user: User }> = ({ user }) => {
   return (
-    <Flex align="center" gap={3} p={2} bg="gray.50" borderRadius="md">
-      <Avatar.Root size="sm">
-        <Avatar.Fallback name={user.name} />
-        <Avatar.Image />
-      </Avatar.Root>
+    <Box
+      w="100%"
+      minH="87px"
+      borderRadius="12px"
+      border="1px solid"
+      borderColor="neutral.outline"
+      p="10px"
+      bg="white"
+      cursor="grab"
+      transition="all 0.2s"
+      _hover={{ boxShadow: "sm", borderColor: "brand.blue" }}
+    >
+      <Flex justify="space-between" align="start">
+        <Flex gap="8px">
+          <Avatar size="sm" name={user.name} src={user.avatarUrl} />
+          <Box>
+            <Text fontSize="14px" fontWeight="700" color="#242424">
+              {user.name}
+            </Text>
+            <Badge mt="1" variant="subtle" size="sm" fontSize="10px">
+              1158 hrs
+            </Badge>
+          </Box>
+        </Flex>
 
-      <Box flex="1">
-        <Text fontSize="sm" fontWeight="medium">
-          {user.name}
-        </Text>
-        <Text fontSize="xs" color="gray.500">
-          {user.id}
-        </Text>
-      </Box>
+        <Badge
+          bg="brand.redLight"
+          color="brand.red"
+          borderRadius="md"
+          fontSize="10px"
+          px={2}
+        >
+          {user.status === "on_leave" ? "On leave" : "Available"}
+        </Badge>
+      </Flex>
 
-      <Badge colorPalette={statusColor(user.status)} variant="subtle">
-        {user.status.replace("_", " ")}
-      </Badge>
-    </Flex>
+      <Flex mt={2} justify="space-between" align="center">
+        <Text fontSize="10px" color="brand.grayText">
+          Jan 12 - Jan 28
+        </Text>
+        <Flex gap="4px">
+          {["m", "d", "w", "d", "v"].map((d, i) => (
+            <Text
+              key={i}
+              fontSize="10px"
+              color={i > 2 ? "brand.red" : "#0CA740"}
+              fontWeight="800"
+              textTransform="uppercase"
+            >
+              {d}
+            </Text>
+          ))}
+        </Flex>
+      </Flex>
+    </Box>
   );
 };
 

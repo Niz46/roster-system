@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Grid, GridItem, Box, Text } from "@chakra-ui/react";
+import { Box, Grid, GridItem, Text } from "@chakra-ui/react";
 import { usePlannerContext } from "../../context/planner/planner.context";
 import { generateTimeSlots } from "../../utils/time";
 import TimeCell from "./TimeCell";
@@ -9,27 +9,63 @@ const CalendarGrid: React.FC = () => {
   const { state } = usePlannerContext();
   const slots = useMemo(() => generateTimeSlots("08:00", "20:00", 30), []);
 
-  return (
-    <Box bg="white" borderRadius="md" p={4} boxShadow="sm">
-      <Grid
-        templateColumns={`100px repeat(${state.resources.length}, 1fr)`}
-        gap={2}
-        alignItems="start"
-      >
-        <GridItem>
-          <Box py={2} px={2} />
-        </GridItem>
+  const resourceColWidth = "1fr";
 
+  return (
+    <Box
+      mt="20px"
+      mx="30px"
+      borderTop="1px solid"
+      borderLeft="1px solid"
+      borderColor="neutral.main"
+      h="600px"
+      overflowY="auto"
+      bg="white"
+    >
+      <Grid
+        templateColumns={`80px repeat(${state.resources.length}, ${resourceColWidth})`}
+        position="sticky"
+        top={0}
+        zIndex={10}
+        bg="neutral.surface"
+        borderBottom="1px solid"
+        borderColor="neutral.main"
+      >
+        <GridItem borderRight="1px solid" borderColor="neutral.main" h="44px" />{" "}
         {state.resources.map((res) => (
-          <GridItem key={res.id} py={2} px={2}>
-            <Text fontWeight="semibold">{res.title}</Text>
+          <GridItem
+            key={res.id}
+            h="44px"
+            display="flex"
+            alignItems="center"
+            px={3}
+            borderRight="1px solid"
+            borderColor="neutral.main"
+            bg="neutral.surface"
+          >
+            <Text fontSize="14px" fontWeight="600" color="gray.700">
+              {res.title}
+            </Text>
           </GridItem>
         ))}
+      </Grid>
 
+      <Box position="relative">
         {slots.map((slot) => (
-          <React.Fragment key={slot}>
-            <GridItem borderTop="1px" borderColor="gray.100" py={3}>
-              <Text fontSize="sm" color="gray.500">
+          <Grid
+            key={slot}
+            templateColumns={`80px repeat(${state.resources.length}, ${resourceColWidth})`}
+            borderBottom="1px solid"
+            borderColor="neutral.main"
+          >
+            <GridItem
+              borderRight="1px solid"
+              borderColor="neutral.main"
+              py={2}
+              px={3}
+              bg="white"
+            >
+              <Text fontSize="12px" color="gray.500" fontWeight="medium">
                 {slot}
               </Text>
             </GridItem>
@@ -37,11 +73,10 @@ const CalendarGrid: React.FC = () => {
             {state.resources.map((res) => (
               <GridItem
                 key={`${res.id}-${slot}`}
-                borderTop="1px"
-                borderColor="gray.100"
-                minH="60px"
-                px={2}
+                borderRight="1px solid"
+                borderColor="neutral.main"
                 position="relative"
+                minH="60px"
               >
                 <TimeCell
                   time={slot}
@@ -49,20 +84,22 @@ const CalendarGrid: React.FC = () => {
                   cellHeightPx={60}
                   slotStepMins={30}
                 />
+
                 {state.events
                   .filter((ev) => ev.resourceId === res.id)
-                  .filter(
-                    (ev) =>
-                      new Date(ev.start).toTimeString().slice(0, 5) === slot,
-                  )
+                  .filter((ev) => {
+                    return (
+                      new Date(ev.start).toTimeString().slice(0, 5) === slot
+                    );
+                  })
                   .map((ev) => (
                     <EventCard key={ev.id} event={ev} />
                   ))}
               </GridItem>
             ))}
-          </React.Fragment>
+          </Grid>
         ))}
-      </Grid>
+      </Box>
     </Box>
   );
 };

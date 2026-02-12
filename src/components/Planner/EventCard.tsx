@@ -1,57 +1,69 @@
 import React from "react";
-import { Box, Text, Badge } from "@chakra-ui/react";
-import { RosterEvent } from "../../context/planner/planner.types";
-import { usePlannerContext } from "../../context/planner/planner.context";
+import { Box, Text, Flex, Badge } from "@chakra-ui/react";
+import { Event } from "../../types";
 
-const EventCard: React.FC<{ event: RosterEvent }> = ({ event }) => {
-  const { dispatch } = usePlannerContext();
+const EventCard: React.FC<{ event: Event }> = ({ event }) => {
+  const isSurgery = event.title.includes("Surgery");
+  const isSpecialist = event.title.includes("Pijnspecialist");
 
-  const onDragStart = (e: React.DragEvent<HTMLDivElement>) => {
-    const target = e.currentTarget;
-    const rect = target.getBoundingClientRect();
-    const offsetY = e.clientY - rect.top;
-    const payload = JSON.stringify({
-      id: event.id,
-      offsetY,
-      durationMs:
-        new Date(event.end).getTime() - new Date(event.start).getTime(),
-    });
-    e.dataTransfer.setData("text/plain", payload);
-    e.dataTransfer.effectAllowed = "move";
-  };
-
-  const onClick = () => {
-    dispatch({ type: "SET_SELECTED_EVENT", payload: event.id });
-  };
-
-  const startTime = new Date(event.start).toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-  const endTime = new Date(event.end).toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  const colors = isSurgery
+    ? {
+        bg: "event.orangeBg",
+        border: "event.orangeBorder",
+        text: "event.orangeText",
+      }
+    : isSpecialist
+      ? {
+          bg: "event.greenBg",
+          border: "event.greenBorder",
+          text: "event.greenText",
+        }
+      : {
+          bg: "event.purpleBg",
+          border: "event.purpleBorder",
+          text: "event.purpleText",
+        };
 
   return (
     <Box
-      draggable
-      onDragStart={onDragStart}
-      onClick={onClick}
-      borderRadius="8px"
-      borderWidth="1px"
-      borderColor="gray.200"
-      bg={event.color ?? "gray.50"}
-      p={3}
-      mb={2}
-      cursor="grab"
-      boxShadow="sm"
+      position="absolute"
+      inset="2px"
+      bg={colors.bg}
+      borderLeft="4px solid"
+      borderColor={colors.border}
+      borderRadius="4px"
+      p="8px"
+      zIndex={2}
+      boxShadow="0px 2px 4px rgba(0,0,0,0.05)"
     >
-      <Badge mb={1}>{event.userId}</Badge>
-      <Text fontWeight="bold">{event.title}</Text>
-      <Text fontSize="sm" color="gray.600">
-        {startTime} - {endTime}
-      </Text>
+      <Flex direction="column" gap="1">
+        <Badge
+          bg="white"
+          color={colors.text}
+          variant="outline"
+          size="sm"
+          fontSize="9px"
+          w="fit-content"
+        >
+          HG
+        </Badge>
+        <Text fontSize="12px" fontWeight="700" color="#242424" lineClamp={1}>
+          {event.title}
+        </Text>
+        <Text fontSize="10px" color="gray.500" fontWeight="500">
+          {new Date(event.start).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+          })}{" "}
+          -
+          {new Date(event.end).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+          })}
+        </Text>
+      </Flex>
     </Box>
   );
 };
