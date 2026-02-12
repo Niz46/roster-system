@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, HStack, Button, Text, IconButton } from "@chakra-ui/react";
-import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
+import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
 import { usePlannerContext } from "../../context/planner/planner.context";
 import useDateNavigator from "../../hooks/useDateNavigator";
 import { NativeSelect } from "@chakra-ui/react";
@@ -34,7 +34,7 @@ const PlannerHeader: React.FC = () => {
 
         <HStack gap={2}>
           <IconButton aria-label="previous" onClick={prev}>
-            <ChevronLeftIcon />
+            <LuChevronLeft />
           </IconButton>
 
           <Button onClick={() => dispatch({ type: "SET_DATE", payload: date })}>
@@ -42,7 +42,7 @@ const PlannerHeader: React.FC = () => {
           </Button>
 
           <IconButton aria-label="next" onClick={next}>
-            <ChevronRightIcon />
+            <LuChevronRight />
           </IconButton>
 
           <NativeSelect.Root width="160px">
