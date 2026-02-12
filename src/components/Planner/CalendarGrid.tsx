@@ -14,31 +14,32 @@ const CalendarGrid: React.FC = () => {
   return (
     <Box
       mt="20px"
-      mx="30px"
+      mx={{ base: 2, md: 6, lg: 10 }}
       borderTop="1px solid"
       borderLeft="1px solid"
       borderColor="neutral.main"
       h="600px"
       overflowY="auto"
       bg="white"
+      borderRadius="12px"
     >
       <Grid
-        templateColumns={`80px repeat(${state.resources.length}, ${resourceColWidth})`}
+        templateColumns={`100px repeat(${state.resources.length}, ${resourceColWidth})`}
         position="sticky"
         top={0}
-        zIndex={10}
+        zIndex={12}
         bg="neutral.surface"
         borderBottom="1px solid"
         borderColor="neutral.main"
       >
-        <GridItem borderRight="1px solid" borderColor="neutral.main" h="44px" />{" "}
+        <GridItem borderRight="1px solid" borderColor="neutral.main" h="48px" />
         {state.resources.map((res) => (
           <GridItem
             key={res.id}
-            h="44px"
+            h="48px"
             display="flex"
             alignItems="center"
-            px={3}
+            px={4}
             borderRight="1px solid"
             borderColor="neutral.main"
             bg="neutral.surface"
@@ -54,18 +55,18 @@ const CalendarGrid: React.FC = () => {
         {slots.map((slot) => (
           <Grid
             key={slot}
-            templateColumns={`80px repeat(${state.resources.length}, ${resourceColWidth})`}
+            templateColumns={`100px repeat(${state.resources.length}, ${resourceColWidth})`}
             borderBottom="1px solid"
             borderColor="neutral.main"
           >
             <GridItem
               borderRight="1px solid"
               borderColor="neutral.main"
-              py={2}
-              px={3}
+              py={3}
+              px={4}
               bg="white"
             >
-              <Text fontSize="12px" color="gray.500" fontWeight="medium">
+              <Text fontSize="12px" color="gray.500" fontWeight="500">
                 {slot}
               </Text>
             </GridItem>
@@ -77,6 +78,9 @@ const CalendarGrid: React.FC = () => {
                 borderColor="neutral.main"
                 position="relative"
                 minH="60px"
+                px={3}
+                py={2}
+                bg="white"
               >
                 <TimeCell
                   time={slot}

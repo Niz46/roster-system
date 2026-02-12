@@ -1,15 +1,6 @@
 import React from "react";
-import {
-  Box,
-  Input,
-  VStack,
-  Heading,
-  Flex,
-  Icon,
-  Badge,
-} from "@chakra-ui/react";
-import { InputGroup } from "../ui/input-group";
-import { SearchNormal1, Filter } from "iconsax-reactjs";
+import { Box, Input, VStack, Heading, Flex, Icon, Badge, HStack } from "@chakra-ui/react";
+import { Filter } from "iconsax-reactjs";
 import { usePlannerContext } from "../../context/planner/planner.context";
 import UserChip from "./UserChip";
 
@@ -18,56 +9,57 @@ const UsersList: React.FC = () => {
 
   return (
     <Box
-      w="345px"
-      h="calc(100vh - 120px)"
+      w={{ base: "100%", lg: "345px" }}
+      h="calc(100vh - 140px)"
       borderRadius="16px"
-      border="2px solid"
-      borderColor="neutral.border"
+      border="1px solid"
+      borderColor="neutral.outline"
       bg="white"
-      p="24px"
+      p="20px"
       display="flex"
       flexDirection="column"
-      gap="20px"
+      gap="16px"
     >
       <Flex justify="space-between" align="center">
-        <Heading fontSize="18px" fontWeight="bold">
+        <Heading fontSize="18px" fontWeight="700">
           Roster
         </Heading>
-        <Icon
-          as={Filter}
-          boxSize="20px"
-          color="neutral.text"
-          cursor="pointer"
-        />
+        <Icon as={Filter} boxSize="20px" color="neutral.text" cursor="pointer" />
       </Flex>
 
-      <InputGroup
-        flex="1"
-        startElement={<SearchNormal1 size="20" color="#94A3B8" />}
-      >
+      <Box>
         <Input
           placeholder="Search"
           h="44px"
-          borderRadius="8px"
+          borderRadius="10px"
           borderColor="neutral.outline"
           _focus={{ borderColor: "brand.blue", boxShadow: "none" }}
           fontSize="14px"
+          pl="40px"
         />
-      </InputGroup>
+      </Box>
 
-      <Flex gap="12px">
+      <HStack spacing={3}>
         <Badge px={3} py={1} borderRadius="full" bg="brand.blue" color="white">
           All {state.users.length}
         </Badge>
-      </Flex>
+        <Badge px={3} py={1} borderRadius="full" bg="gray.50" color="neutral.text">
+          Available {state.users.filter(u => u.status !== "on_leave").length}
+        </Badge>
+        <Badge px={3} py={1} borderRadius="full" bg="white" border="1px solid" borderColor="neutral.outline">
+          On Leave {state.users.filter(u => u.status === "on_leave").length}
+        </Badge>
+      </HStack>
 
       <VStack
         align="stretch"
         overflowY="auto"
+        spacing={3}
+        pt={2}
         css={{
-          "&::-webkit-scrollbar": { width: "4px" },
+          "&::-webkit-scrollbar": { width: "6px" },
           "&::-webkit-scrollbar-thumb": {
-            bg: "gray.200",
+            background: "#E6EEF8",
             borderRadius: "24px",
           },
         }}

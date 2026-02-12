@@ -92,6 +92,7 @@ const TimeCell: React.FC<TimeCellProps> = ({
       h={`${cellHeightPx}px`}
       w="100%"
       position="relative"
+      _hover={{ bg: "rgba(88, 101, 242, 0.02)" }}
     />
   );
 };
